@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinamento e Suporte</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Treinamento e Suporte</h1>
+    </header>
+
+    <main>
+        <!-- Módulos de Treinamento -->
+        <section id="training-modules">
+            <h2>Módulos de Treinamento</h2>
+            <ul id="modules-list"></ul>
+        </section>
+
+        <!-- Chamados para o TI -->
+        <section id="ti-tickets">
+            <h2>Abrir Chamado para o TI</h2>
+            <form id="ticket-form">
+                <label for="subject">Assunto:</label>
+                <input type="text" id="subject" name="subject" required>
+
+                <label for="description">Descrição:</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <label for="urgency">Urgência:</label>
+                <select id="urgency" name="urgency" required>
+                    <option value="">Selecione</option>
+                    <option value="Baixa">Baixa</option>
+                    <option value="Média">Média</option>
+                    <option value="Alta">Alta</option>
+                </select>
+
+                <button type="submit">Enviar Chamado</button>
+            </form>
+            <p id="form-message"></p>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
