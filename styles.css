@@ -1,63 +1,91 @@
-// Estrutura inicial do backend usando Node.js para o aplicativo
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
+}
 
-const express = require('express');
-const nodemailer = require('nodemailer');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+header {
+  background-color: #0073e6;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+}
 
-const app = express();
-const PORT = 3000;
+main {
+  padding: 1rem;
+  max-width: 600px;
+  margin: auto;
+}
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
+#chat-container {
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-top: 1rem;
+}
 
-// Simulação de dados de treinamento
-const trainingModules = [
-  { id: 1, title: 'Introdução à Empresa', content: 'Conteúdo do módulo 1' },
-  { id: 2, title: 'Políticas da Empresa', content: 'Conteúdo do módulo 2' },
-  { id: 3, title: 'Ferramentas e Sistemas', content: 'Conteúdo do módulo 3' },
-];
+#chat-box {
+  height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
 
-// Rota: Obter módulos de treinamento
-app.get('/api/training-modules', (req, res) => {
-  res.json(trainingModules);
-});
+/* Estilo para mensagens no chat */
+.message {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #000; /* Cor preta para o texto */
+  font-weight: bold; /* Negrito */
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  line-height: 1.6; /* Espaçamento entre linhas */
+}
 
-// Rota: Enviar chamados para o TI
-app.post('/api/submit-ticket', async (req, res) => {
-  const { subject, description, urgency } = req.body;
+.message.user {
+  background-color: #e8f4fc; /* Fundo azul claro para mensagens do usuário */
+  text-align: right;
+}
 
-  if (!subject || !description || !urgency) {
-    return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
-  }
+.message.bot {
+  background-color: #f1f1f1; /* Fundo cinza claro para mensagens do bot */
+  text-align: left;
+}
 
-  // Configuração do transporte de e-mail
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-      user: 'seuemail@gmail.com', // Substituir pelo e-mail real
-      pass: 'suasenha',         // Substituir pela senha real
-    },
-  });
+#chat-input {
+  display: flex;
+  gap: 0.5rem;
+}
 
-  const mailOptions = {
-    from: 'seuemail@gmail.com',
-    to: 'emaildoti@empresa.com', // Substituir pelo e-mail do setor de TI
-    subject: `Chamado TI: ${subject}`,
-    text: `Descrição: ${description}\nUrgência: ${urgency}`,
-  };
+#user-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
 
-  try {
-    await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: 'Chamado enviado com sucesso!' });
-  } catch (error) {
-    console.error('Erro ao enviar e-mail:', error);
-    res.status(500).json({ message: 'Erro ao enviar chamado. Tente novamente mais tarde.' });
-  }
-});
+#send-btn {
+  background-color: #0073e6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-// Iniciar o servidor
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
-});
+#send-btn:hover {
+  background-color: #005bb5;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  background: #ddd;
+  margin-top: 1rem;
+}

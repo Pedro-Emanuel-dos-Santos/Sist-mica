@@ -3,75 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assistente IA para Colaboradores</title>
+    <title>SigmAssist</title>
     <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
 </head>
 <body>
     <header>
-        <h1>Assistente Inteligente</h1>
+        <h1>SigmAssist</h1>
         <p>Esclareça suas dúvidas sobre os sistemas da empresa</p>
     </header>
     <main>
         <section id="chat-container">
-            <div id="chat-box">
-                <!-- As mensagens do chat aparecerão aqui -->
-            </div>
+            <div id="chat-box"></div>
             <div id="chat-input">
-                <input type="text" id="user-input" placeholder="Digite sua pergunta...">
-                <button id="send-btn">Enviar</button>
+                <input type="text" id="user-input" placeholder="Digite sua pergunta..." aria-label="Digite sua pergunta">
+                <button id="send-btn" aria-label="Enviar pergunta">Enviar</button>
             </div>
+            <div id="error-message" style="display: none; color: red;">Por favor, digite uma pergunta.</div>
         </section>
     </main>
     <footer>
-        <p>© 2024 Assistente IA - Desenvolvido por [Seu Nome]</p>
+        <p>© 2024 Assistente IA - Desenvolvido por Pedro Emanuel</p>
     </footer>
+
     <script>
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
-
-        async function getResponse(question) {
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer YOUR_API_KEY`
-                },
-                body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
-                    messages: [
-                        { role: "system", content: "Você é um assistente que responde dúvidas sobre os sistemas da empresa." },
-                        { role: "user", content: question }
-                    ]
-                })
-            });
-
-            const data = await response.json();
-            return data.choices[0].message.content;
-        }
+        const errorMessage = document.getElementById('error-message');
 
         function appendMessage(role, message) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', role);
-            messageDiv.textContent = message;
+            messageDiv.innerHTML = message.replace(/\n/g, '<br>');
             chatBox.appendChild(messageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        sendBtn.addEventListener('click', async () => {
-            const question = userInput.value;
-            if (!question.trim()) return;
+        async function getChatGPTResponse(question) {
+            try {
+                const response = await fetch('http://localhost:3000/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question }),
+                });
 
+                const data = await response.json();
+                if (data.reply) {
+                    return data.reply;
+                } else {
+                    throw new Error("Resposta inválida do servidor");
+                }
+            } catch (error) {
+                console.error("Erro ao obter resposta do ChatGPT:", error.message);
+                return "Desculpe, ocorreu um erro ao processar sua solicitação.";
+            }
+        }
+
+        sendBtn.addEventListener('click', async () => {
+            const question = userInput.value.trim();
+            if (!question) {
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            errorMessage.style.display = 'none';
             appendMessage('user', question);
             userInput.value = '';
 
-            appendMessage('assistant', 'Pensando...');
+            const response = await getChatGPTResponse(question);
+            appendMessage('assistant', response);
+        });
 
-            const response = await getResponse(question);
-
-            const thinkingMessage = document.querySelector('.assistant:last-child');
-            if (thinkingMessage) thinkingMessage.textContent = response;
+        userInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendBtn.click();
+            }
         });
     </script>
 </body>
