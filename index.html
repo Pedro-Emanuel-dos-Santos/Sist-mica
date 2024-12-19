@@ -25,41 +25,57 @@
         <p>© 2024 Assistente IA - Desenvolvido por Pedro Emanuel</p>
     </footer>
 
-    <script>
+    <!-- Importa o script como módulo -->
+    <script type="module">
+        import knowledgeBase from './knowledgeBase.js';
+
         const chatBox = document.getElementById('chat-box');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
         const errorMessage = document.getElementById('error-message');
 
-        function appendMessage(role, message) {
+        // Função para adicionar mensagens no chat
+        function appendMessage(role, message, typing = false) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', role);
-            messageDiv.innerHTML = message.replace(/\n/g, '<br>');
             chatBox.appendChild(messageDiv);
+
+            if (typing) {
+                simulateTyping(message, messageDiv); // Chama o efeito de digitação corrigido
+            } else {
+                messageDiv.innerHTML = message; // Renderiza diretamente o HTML
+            }
+
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        async function getChatGPTResponse(question) {
-            try {
-                const response = await fetch('http://localhost:3000/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question }),
-                });
+        // Simula o efeito de digitação letra por letra preservando o HTML
+        function simulateTyping(message, element) {
+            let index = 0;
+            const tempElement = document.createElement('div');
+            tempElement.innerHTML = message; // Carrega o HTML formatado
+            const htmlContent = tempElement.innerHTML;
 
-                const data = await response.json();
-                if (data.reply) {
-                    return data.reply;
-                } else {
-                    throw new Error("Resposta inválida do servidor");
+            const interval = setInterval(() => {
+                element.innerHTML = htmlContent.substring(0, index); // Adiciona caractere por caractere
+                index++;
+                if (index > htmlContent.length) {
+                    clearInterval(interval);
                 }
-            } catch (error) {
-                console.error("Erro ao obter resposta do ChatGPT:", error.message);
-                return "Desculpe, ocorreu um erro ao processar sua solicitação.";
-            }
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 30); // Velocidade de digitação: 30ms por caractere
         }
 
-        sendBtn.addEventListener('click', async () => {
+        // Busca a resposta na base de conhecimento
+        function getLocalResponse(question) {
+            const lowerQuestion = question.toLowerCase();
+            return knowledgeBase[lowerQuestion] || `
+                Desculpe, não encontrei uma resposta para sua pergunta peça para o Pedro me treinar sobre esse assunto. 
+            `;
+        }
+
+        // Evento para o botão Enviar
+        sendBtn.addEventListener('click', () => {
             const question = userInput.value.trim();
             if (!question) {
                 errorMessage.style.display = 'block';
@@ -67,18 +83,28 @@
             }
 
             errorMessage.style.display = 'none';
-            appendMessage('user', question);
+            appendMessage('user', question); // Adiciona mensagem do usuário
             userInput.value = '';
 
-            const response = await getChatGPTResponse(question);
-            appendMessage('assistant', response);
+            // Mostra "pensando..." antes da resposta
+            const thinkingMessage = document.createElement('div');
+            thinkingMessage.classList.add('message', 'assistant');
+            thinkingMessage.textContent = "Pensando...";
+            chatBox.appendChild(thinkingMessage);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            setTimeout(() => {
+                chatBox.removeChild(thinkingMessage); // Remove "pensando..."
+                const response = getLocalResponse(question); // Busca resposta
+                appendMessage('assistant', response, true); // Adiciona resposta
+            }, 1000); // Delay de 1 segundo
         });
 
+        // Evento para a tecla Enter
         userInput.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 sendBtn.click();
             }
         });
     </script>
-</body>
 </html>

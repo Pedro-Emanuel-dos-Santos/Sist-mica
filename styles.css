@@ -3,7 +3,11 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f4f4f4;
-  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
 }
 
 header {
@@ -11,20 +15,132 @@ header {
   color: white;
   text-align: center;
   padding: 1rem 0;
+  width: 100%;
 }
 
-main {
-  padding: 1rem;
-  max-width: 600px;
-  margin: auto;
+/* Tela de Login */
+#login-screen {
+  background-color: white;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
 }
 
+#login-screen h2 {
+  font-size: 24px;
+  margin-bottom: 1rem;
+  color: #0073e6;
+}
+
+#login-screen input {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 1rem 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+#login-screen button {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #0073e6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#login-screen button:hover {
+  background-color: #005bb5;
+}
+
+#login-error {
+  color: red;
+  display: none;
+  margin-top: 10px;
+}
+
+#register-link {
+  margin-top: 15px;
+  display: block;
+  color: #0073e6;
+  text-decoration: none;
+}
+
+#register-link:hover {
+  text-decoration: underline;
+}
+
+/* Estilo do conteúdo principal */
+#main-content {
+  display: none;
+  width: 100%;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  background: #ddd;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* Tela de Cadastro */
+#register-screen {
+  background-color: white;
+  padding: 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+#register-screen h2 {
+  font-size: 24px;
+  margin-bottom: 1rem;
+  color: #0073e6;
+}
+
+#register-screen input {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 1rem 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+#register-screen button {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #0073e6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#register-screen button:hover {
+  background-color: #005bb5;
+}
+
+/* Estilo do chat */
 #chat-container {
-  background: white;
+  margin-top: 1rem;
+  background-color: white;
+  padding: 1rem;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-  margin-top: 1rem;
 }
 
 #chat-box {
@@ -34,28 +150,6 @@ main {
   border-radius: 5px;
   padding: 0.5rem;
   margin-bottom: 1rem;
-}
-
-/* Estilo para mensagens no chat */
-.message {
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  color: #000; /* Cor preta para o texto */
-  font-weight: bold; /* Negrito */
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 5px;
-  line-height: 1.6; /* Espaçamento entre linhas */
-}
-
-.message.user {
-  background-color: #e8f4fc; /* Fundo azul claro para mensagens do usuário */
-  text-align: right;
-}
-
-.message.bot {
-  background-color: #f1f1f1; /* Fundo cinza claro para mensagens do bot */
-  text-align: left;
 }
 
 #chat-input {
@@ -83,9 +177,28 @@ main {
   background-color: #005bb5;
 }
 
-footer {
-  text-align: center;
-  padding: 1rem 0;
-  background: #ddd;
-  margin-top: 1rem;
+#error-message {
+  display: none;
+  color: red;
+}
+
+/* Estilo das mensagens */
+.message {
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+  max-width: 80%;
+  word-wrap: break-word;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.user {
+  background-color: #e0f7fa;
+  align-self: flex-end;
+  text-align: right;
+}
+
+.assistant {
+  background-color: #f1f1f1;
+  text-align: left;
 }
